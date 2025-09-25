@@ -43,7 +43,7 @@ public class RestaurantQueueApp extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.setBackground(new Color(70, 130, 180));
 
-        JLabel titleLabel = new JLabel("🍽️ Restaurant Queue Management System");
+        JLabel titleLabel = new JLabel("DineEase Restaurant Queue Management System");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(Color.WHITE);
 
@@ -100,6 +100,7 @@ public class RestaurantQueueApp extends JFrame {
         addImmediateBtn.addActionListener(e -> showAddOrderDialog(true));
         processBtn.addActionListener(e -> processNextOrder());
         refreshBtn.addActionListener(e -> refreshQueueDisplay());
+        clearBtn.addActionListener(e -> clearAllOrders());
 
         panel.add(addRegularBtn);
         panel.add(addImmediateBtn);
@@ -207,7 +208,18 @@ public class RestaurantQueueApp extends JFrame {
         queueSizeLabel.setText("Orders in Queue: " + queueManager.getQueueSize());
     }
 
+    private void clearAllOrders() {
+        int result = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to clear all orders?",
+                "Confirm Clear",
+                JOptionPane.YES_NO_OPTION);
 
+        if (result == JOptionPane.YES_OPTION) {
+            queueManager.clearAllOrders();
+            refreshQueueDisplay();
+            JOptionPane.showMessageDialog(this, "All orders cleared!");
+        }
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
