@@ -49,4 +49,12 @@ public class OrderQueueManager {
         return orderQueue.size();
     }
 
+    public boolean removeOrder(int orderId) {
+        return orderQueue.removeIf(order -> order.getOrderId() == orderId);
+    }
+
+    public void clearAllOrders() {
+        orderQueue.clear();
+        nextOrderId = 1;
+    }
 }
