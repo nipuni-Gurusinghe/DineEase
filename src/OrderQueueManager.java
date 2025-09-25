@@ -34,6 +34,19 @@ public class OrderQueueManager {
         orderQueue.add(insertPosition, order);
         System.out.println("Added Immediate: " + order);
     }
+    public Order processNextOrder() {
+        if (orderQueue.isEmpty()) {
+            return null;
+        }
+        return orderQueue.removeFirst();
+    }
 
+    public List<Order> getAllOrders() {
+        return new ArrayList<>(orderQueue);
+    }
+
+    public int getQueueSize() {
+        return orderQueue.size();
+    }
 
 }
