@@ -21,18 +21,18 @@ public class RestaurantQueueApp extends JFrame {
     }
 
     private void initializeUI() {
-        // Main panel with border layout
+
         setLayout(new BorderLayout(10, 10));
 
-        // Header panel
+
         JPanel headerPanel = createHeaderPanel();
         add(headerPanel, BorderLayout.NORTH);
 
-        // Center panel with orders table
+
         JPanel centerPanel = createCenterPanel();
         add(centerPanel, BorderLayout.CENTER);
 
-        // Control panel with buttons
+
         JPanel controlPanel = createControlPanel();
         add(controlPanel, BorderLayout.SOUTH);
 
@@ -62,7 +62,7 @@ public class RestaurantQueueApp extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Table model
+
         String[] columns = {"Order ID", "Customer Name", "Order Details", "Priority", "Position"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
@@ -88,16 +88,18 @@ public class RestaurantQueueApp extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.setBackground(new Color(240, 240, 240));
 
-        // Buttons
+
         JButton addRegularBtn = createStyledButton("Add Regular Order", new Color(34, 139, 34));
         JButton addImmediateBtn = createStyledButton("Add Immediate Order", new Color(220, 20, 60));
         JButton processBtn = createStyledButton("Process Next Order", new Color(30, 144, 255));
         JButton refreshBtn = createStyledButton("Refresh Queue", new Color(255, 140, 0));
         JButton clearBtn = createStyledButton("Clear All", new Color(128, 128, 128));
 
-        // Button actions
+
         addRegularBtn.addActionListener(e -> showAddOrderDialog(false));
         addImmediateBtn.addActionListener(e -> showAddOrderDialog(true));
+        processBtn.addActionListener(e -> processNextOrder());
+        refreshBtn.addActionListener(e -> refreshQueueDisplay());
 
         panel.add(addRegularBtn);
         panel.add(addImmediateBtn);
@@ -135,6 +137,25 @@ public class RestaurantQueueApp extends JFrame {
         JButton addBtn = new JButton("Add Order");
         JButton cancelBtn = new JButton("Cancel");
 
+        addBtn.addActionListener(e -> {
+            String name = nameField.getText().trim();
+            String details = detailsField.getText().trim();
+
+            if (name.isEmpty() || details.isEmpty()) {
+                JOptionPane.showMessageDialog(dialog, "Please fill all fields!");
+                return;
+            }
+
+            if (immediate) {
+                queueManager.addImmediateOrder(name, details);
+            } else {
+                queueManager.addOrder(name, details);
+            }
+
+            refreshQueueDisplay();
+            dialog.dispose();
+        });
+
         cancelBtn.addActionListener(e -> dialog.dispose());
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -146,6 +167,47 @@ public class RestaurantQueueApp extends JFrame {
 
         dialog.setVisible(true);
     }
+
+    private void processNextOrder() {
+        Order order = queueManager.processNextOrder();
+        if (order != null) {
+            JOptionPane.showMessageDialog(this,
+                    "Processing: " + order.toString(),
+                    "Order Processed",
+                    JOptionPane.INFORMATION_MESSAGE);
+            refreshQueueDisplay();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "No orders in queue!",
+                    "Queue Empty",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void refreshQueueDisplay() {
+
+        tableModel.setRowCount(0);
+
+
+        java.util.List<Order> orders = queueManager.getAllOrders();
+
+
+        int position = 1;
+        for (Order order : orders) {
+            tableModel.addRow(new Object[]{
+                    order.getOrderId(),
+                    order.getCustomerName(),
+                    order.getOrderDetails(),
+                    order.isImmediate() ? "IMMEDIATE" : "Regular",
+                    position++
+            });
+        }
+
+
+        queueSizeLabel.setText("Orders in Queue: " + queueManager.getQueueSize());
+    }
+
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
