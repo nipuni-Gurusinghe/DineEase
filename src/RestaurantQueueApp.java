@@ -11,7 +11,7 @@ public class RestaurantQueueApp extends JFrame {
     private JLabel queueSizeLabel;
 
     public RestaurantQueueApp() {
-        // Initialize database first
+
         DatabaseUtil.initializeDatabase();
 
         queueManager = new OrderQueueManager();
@@ -34,7 +34,7 @@ public class RestaurantQueueApp extends JFrame {
         JPanel controlPanel = createControlPanel();
         add(controlPanel, BorderLayout.SOUTH);
 
-        // Refresh display after UI is initialized
+
         refreshQueueDisplay();
     }
 
@@ -118,6 +118,11 @@ public class RestaurantQueueApp extends JFrame {
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(true);
+
         return button;
     }
 

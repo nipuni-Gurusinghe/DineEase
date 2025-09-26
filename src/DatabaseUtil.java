@@ -2,15 +2,11 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 
 public class DatabaseUtil {
-    // For MySQL Workbench default installation
     private static final String URL = "jdbc:mysql://localhost:3308/restaurant_queue";
     private static final String USERNAME = "root";
 
-    // Try these passwords one by one (common MySQL Workbench defaults)
-    private static final String PASSWORD = "root";       // Try this first
-    // private static final String PASSWORD = "password";  // Try this second
-    // private static final String PASSWORD = "";          // Try this third (empty)
-    // private static final String PASSWORD = "1234";      // Try this fourth
+    private static final String PASSWORD = "root";
+
 
     static {
         try {
@@ -28,7 +24,6 @@ public class DatabaseUtil {
     }
 
     public static boolean testConnection() {
-        // Test multiple password options
         String[] passwords = {"root", "password", "", "1234", "MySQL80"};
 
         for (String pwd : passwords) {
@@ -56,7 +51,6 @@ public class DatabaseUtil {
             return;
         }
 
-        // If connection successful, verify table exists
         try (Connection conn = getConnection()) {
             System.out.println("Database connection successful!");
         } catch (SQLException e) {
